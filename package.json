@@ -1,0 +1,26 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "Amazon-like CLI application for selling and managing items",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leaf-junkie/Bamazon.git"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "author": "julie ragsdale",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leaf-junkie/Bamazon/issues"
+  },
+  "homepage": "https://github.com/leaf-junkie/Bamazon#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "mysql": "^2.16.0"
+  }
+}

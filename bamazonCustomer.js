@@ -1,23 +1,29 @@
-const mysql = require('mysql');
-const inquirer = require('inquirer');
-
+const mysql = require("mysql");
+const inquirer = require("inquirer");
+const products = require("./product.js");
 
 const connection = mysql.createConnection({
-    host: 'localhost',
-    port: '3306',
-    user: 'root',
-    password: '12345678',
-    database: 'bamazon'
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "12345678",
+    database: "bamazon"
 });
 
-connection.connect(function(err){
+connection.connect(err => {
     if(err) throw err;
+    console.log(`Connected as ID ${connection.threadId}\n`);
+    displayProducts();
     start();
 });
 
-// Display products (id, name, price)
+// Display products from database (id, name, price)
 function displayProducts() {
-
+    connection.query("select * from products", (err, response) => {
+        if(err) throw err;
+        console.log(response);
+        connection.end();
+    });
 }
 
 function start() {
@@ -37,13 +43,20 @@ function start() {
             message: 'How many would you like to purchase?'  
         }
     ]).then(function() {
-        // Once the customer has placed the order, your application should check if your store has enough of the product to meet the customer's request.
-        //      If not, the app should log a phrase like Insufficient quantity!, and then prevent the order from going through.
-    
+        const total;
+        // Check if store has enough of the product to meet the customer's request
+        if(response.quantity > this.stock) {
+            // If not, log a phrase like Insufficient quantity! and prevent the order from going through
+            console.log(`We apologize for the inconvenience, but only ${this.stock} remain`);
         // However, if your store does have enough of the product, you should fulfill the customer's order.
-        //      This means updating the SQL database to reflect the remaining quantity.
-        //      Once the update goes through, show the customer the total cost of their purchase.
-    
+        } else {
+            // Update quantity in SQL database
+
+            // Once updated, display total cost of purchase
+            for (i = 0; i ; i++) {
+                total += i;
+            }
+            console.log();
+        }
     });
-    
 }
