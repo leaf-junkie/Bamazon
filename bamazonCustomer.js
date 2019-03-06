@@ -1,15 +1,22 @@
-const mysql = require("mysql");
-const inquirer = require("inquirer");
-const products = require("./product.js");
+// Require statements
+const mysql = require('mysql');
+const inquirer = require('inquirer');
+const products = require('./product.js');
 
+// Variable declarations
+const item = response.id;
+const quantity = response.quantity;
+const customerTotal = item * quantity;
+const updatedStock = stock - response.quantity;
+
+// Connect to MySQL
 const connection = mysql.createConnection({
-    host: "localhost",
+    host: 'localhost',
     port: 3306,
-    user: "root",
-    password: "12345678",
-    database: "bamazon"
+    user: 'root',
+    password: '12345678',
+    database: 'bamazon'
 });
-
 connection.connect(err => {
     if(err) throw err;
     console.log(`Connected as ID ${connection.threadId}\n`);
@@ -18,49 +25,56 @@ connection.connect(err => {
 });
 
 // Display products from database (id, name, price)
-function displayProducts() {
-    connection.query("select * from products", (err, response) => {
-        if(err) throw err;
-        console.log(response);
-        connection.end();
-    });
-}
+displayProducts();
 
+// Start app
 function start() {
-    // Prompt user
     inquirer
     .prompt([
-        // The first should ask them the ID of the product they would like to buy
         {
             type: 'input',
             name: 'id',
             message: 'Please enter the ID of the item you would like to purchase.'
         },
-        // The second message should ask how many units of the product they would like to buy
         {
             type: 'input',
             name: 'quantity',
             message: 'How many would you like to purchase?'  
         }
     ]).then(function() {
-        // Check if store has enough of the product to meet the customer's request
+        // Does store have enough inventory to meet customer's request?
         if(response.quantity > this.stock) {
-            // If not, log a phrase like Insufficient quantity! and prevent the order from going through
+            // NO: Prevent the order from going through
             console.log(`We apologize for the inconvenience, but only ${this.stock} remain`);
-        // However, if your store does have enough of the product, you should fulfill the customer's order.
+        // YES: Fulfill the customer's order.
         } else {
             // Update quantity in SQL database
-            UPDATE products 
-
+            updateDB();
             // Once updated, display total cost of purchase
-            const item = response.id;
-            const quantity = response.quantity;
-            const total = item * quantity;
-
-            for (i = 0; i ; i++) {
-                total += i;
-            }
-            console.log(`Your total is ${total}`);
+            displayTotal();
         }
     });
+}
+
+function displayProducts() {
+    connection.query('SELECT * FROM products', (err, response) => {
+        if(err) throw err;
+        console.log(response);
+        connection.end();
+    });
+}
+
+function updateDB() {
+    connection.query(`
+    UPDATE products 
+    SET stock_quantity = ${updatedStock} 
+    WHERE item_id = ${response.id}
+    `);
+}
+
+function displayTotal() {
+    for (i = 0; i ; i++) {
+        customerTotal += i;
+    }
+    console.log(`Your total is ${customerTotal}`);
 }
