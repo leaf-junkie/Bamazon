@@ -43,7 +43,6 @@ function start() {
             message: 'How many would you like to purchase?'  
         }
     ]).then(function() {
-        const total;
         // Check if store has enough of the product to meet the customer's request
         if(response.quantity > this.stock) {
             // If not, log a phrase like Insufficient quantity! and prevent the order from going through
@@ -51,12 +50,17 @@ function start() {
         // However, if your store does have enough of the product, you should fulfill the customer's order.
         } else {
             // Update quantity in SQL database
+            UPDATE products 
 
             // Once updated, display total cost of purchase
+            const item = response.id;
+            const quantity = response.quantity;
+            const total = item * quantity;
+
             for (i = 0; i ; i++) {
                 total += i;
             }
-            console.log();
+            console.log(`Your total is ${total}`);
         }
     });
 }
