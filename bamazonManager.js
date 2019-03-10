@@ -43,21 +43,33 @@ function menu() {
             inquirer
             .prompt([
                 {
-                    type: 'list',
-                    name: 'selectItem',
-                    message: 'Please select the item you would like to restock.',
-                    choices: ['', '', '', '', '', '', '', '', '', '']
+                    type: 'input',
+                    name: 'itemId',
+                    message: 'Please enter the ID of the item you would like to restock.',
+                },
+                {
+                    type: 'input',
+                    name: 'quantity',
+                    message: 'How many would you like to add to the inventory?'
                 }
-            ]).then(function(selectedItem) {
-
+            ]).then(function(answers) {
+                // Update database 
+                updateStockQuantity(answers.itemId, answers.quantity, function(err) {
+                    if(err) console.log(err);
+                    console.log(`Inventory of item ${answers.itemId} successfully restocked (+${answers.quantity}).`);
+                displayUpdatedProduct();
+                menu();
+                });
             });
 
-        // } else if(response.menu === 'Add New Product') {
-        //     // Allow manager to add completely new product to store
-        //     const newProduct = Product(name, department, price, stock);
+        } else if(response.menu === 'Add New Product') {
+            // Allow manager to add completely new product to store
+            addProduct();
+            // const newProduct = Product(name, department, price, stock);
 
         } else {
             console.log('You have exited the program.');
+            connection.end();
         }
     });
 }
@@ -75,4 +87,23 @@ function displayLowInventory(callback) {
     FROM products
     WHERE stock_quantity < 5
     `, callback);
+}
+
+function updateStockQuantity(itemId, quantity, callback) {
+    connection.query(`
+    UPDATE products 
+    SET stock_quantity = ${quantity} 
+    WHERE item_id = ${itemId}
+    `, callback);
+}
+
+function displayUpdatedProduct(itemId, callback) {
+    connection.query(`
+    SELECT item_id, product_name, price, inventory
+    FROM products
+    WHERE item_id = ${itemId}`, callback);
+}
+
+function addProduct(id, name, department, price, quantity) {
+    connection.query(``);
 }
