@@ -1,4 +1,3 @@
-// Require statements
 const inquirer = require('inquirer');
 const connection = require('./database');
 
@@ -104,3 +103,7 @@ function getProduct(itemId, callback) {
     WHERE item_id = ${itemId}
     `, callback);
 }
+
+// module.exports = {
+//     displayProducts: displayProducts
+// }
