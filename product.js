@@ -5,11 +5,9 @@ function Product(id, name, department, price, stock) {
     this.price = price;
     this.stock = stock;
 
-    this.trackStock = function() {
+    // this.trackStock = function() {
 
-    }
-
-    // this.
+    // }
 }
 
 module.exports = Product;
