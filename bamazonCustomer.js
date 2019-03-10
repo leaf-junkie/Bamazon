@@ -1,16 +1,7 @@
 // Require statements
-const mysql = require('mysql');
 const inquirer = require('inquirer');
-// const products = require('./product.js');
+const connection = require('./database');
 
-// Connect to MySQL
-const connection = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: '12345678',
-    database: 'bamazon'
-});
 connection.connect(function(err) {
     if(err) console.log("Error: " + err);
     console.log(`Connected as ID ${connection.threadId}\n`);
@@ -58,6 +49,7 @@ function start() {
             if(stock < answers.quantity) {
                 // NO: Prevent the order from going through
                 console.log(`Sorry, only ${stock} remain`);
+                connection.end();
             // YES: Fulfill the customer's order.
             } else {
                 // Update quantity in SQL database
