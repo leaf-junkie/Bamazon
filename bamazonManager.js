@@ -57,15 +57,46 @@ function menu() {
                 updateStockQuantity(answers.itemId, answers.quantity, function(err) {
                     if(err) console.log(err);
                     console.log(`Inventory of item ${answers.itemId} successfully restocked (+${answers.quantity}).`);
-                displayUpdatedProduct();
+                displayUpdatedProduct(itemId);
                 menu();
                 });
             });
 
         } else if(response.menu === 'Add New Product') {
             // Allow manager to add completely new product to store
-            addProduct();
-            // const newProduct = Product(name, department, price, stock);
+            console.log('Please follow the prompt to add information about the new item.');
+            inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'newName',
+                    message: 'What is the name of the item you would like to add?'
+                },
+                {
+                    type: 'input',
+                    name: 'newDepartment',
+                    message: 'What is the name of the department?'
+                },
+                {
+                    type: 'input',
+                    name: 'newPrice',
+                    message: 'What is the price per item?'
+                },
+                {
+                    type: 'input',
+                    name: 'newQuantity',
+                    message: 'How many would you like to add?'
+                }
+            ]).then(function(answers) {
+                addProduct(answers.newName, answers.newDepartment, answers.newPrice, answers.newQuantity, function(err, response) {
+                    if(err) console.log(err);
+                    displayAll(function(err, products) {
+                        if(err) console.log(err);
+                        console.log(products);
+                        menu();
+                    });
+                });
+            });
 
         } else {
             console.log('You have exited the program.');
@@ -92,7 +123,7 @@ function displayLowInventory(callback) {
 function updateStockQuantity(itemId, quantity, callback) {
     connection.query(`
     UPDATE products 
-    SET stock_quantity = ${quantity} 
+    SET stock_quantity = stock_quantity + ${quantity} 
     WHERE item_id = ${itemId}
     `, callback);
 }
@@ -104,6 +135,8 @@ function displayUpdatedProduct(itemId, callback) {
     WHERE item_id = ${itemId}`, callback);
 }
 
-function addProduct(id, name, department, price, quantity) {
-    connection.query(``);
+function addProduct(name, department, price, quantity, callback) {
+    connection.query(`
+    INSERT INTO products(product_name, department_name, price, stock_quantity)
+    VALUES('${name}', '${department}', ${price}, ${quantity})`, callback);
 }

@@ -103,7 +103,3 @@ function getProduct(itemId, callback) {
     WHERE item_id = ${itemId}
     `, callback);
 }
-
-// module.exports = {
-//     displayProducts: displayProducts
-// }
