@@ -1,10 +1,12 @@
 # Bamazon
 An Amazon-like CLI storefront that takes in orders from customers and depletes stock from the store's inventory.
 
-This application uses:
-* Node.js
-* MySQL
-* Inquirer
+To use this application, you will need to npm install MySQL and Inquirer. Be sure to run the following lines in node.js:
+* `<npm init>`
+* `<npm i mysql>`
+* `<npm i inquirer>`
+
+Additionally, you can use a table formatting package like console.table to improve the readability of your table.
 
 ### Bamazon Customer
 As a valued Bamazon **customer**, you can view all of our wonderful products.
@@ -36,4 +38,4 @@ As a **manager**, you can view and manage the inventory of the available product
 As a **supervisor**, you will be able to view and manage Bamazon's departments.
 
 
-### View portfolio: file:///C:/Users/ragsd/leaf-junkie.github.io/portfolio.html
+#### View portfolio: file:///C:/Users/ragsd/leaf-junkie.github.io/portfolio.html
