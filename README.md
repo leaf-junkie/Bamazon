@@ -10,9 +10,9 @@ This application uses:
 As a valued Bamazon **customer**, you can view all of our wonderful products.
 Select your desired item and quantity to checkout.
 
-![Image 1](/images/img-1.png)
+![Image 1](images/img-1.png)
 
-![Image 2](/images/img-2.png)
+![Image 2](images/img-2.png)
 
 ### Bamazon Manager
 As a **manager**, you can view and manage the inventory of the available products. 
