@@ -1,10 +1,11 @@
+const chalk = require('chalk');
 const cTable = require('console.table');
 const inquirer = require('inquirer');
 const connection = require('./database');
 
 connection.connect(function(err) {
-    if(err) console.log("Error: " + err);
-    console.log(`Connected as ID ${connection.threadId}\n`);
+    if(err) console.log(chalk.bgRed('Error: ' + err));
+    console.log(chalk.gray(`Connected as ID ${connection.threadId}\n`));
     displayProducts();
 });
 
@@ -14,7 +15,7 @@ function displayProducts() {
     SELECT item_id, product_name, price 
     FROM products 
     WHERE stock_quantity > 0`, (err, response) => {
-        if(err) console.log(err);
+        if(err) console.log(chalk.bgRed(err));
         response.forEach(p => p.price = `$ ${p.price.toFixed(2)}`);
         console.table(response);
         // connection.end();
@@ -39,7 +40,7 @@ function start() {
         }
     ]).then(function(answers) {
         getProduct(answers.id, function(err, products) {
-            if(err) console.log(err);
+            if(err) console.log(chalk.bgRed(err));
             products.forEach(p => p.price = `$ ${p.price.toFixed(2)}`);
             console.table(products);
             
@@ -48,7 +49,7 @@ function start() {
             
             // If insufficient inventory, prevent order from processing
             if(stock < answers.quantity) {
-                console.log(`Sorry, only ${stock} remain`);
+                console.log(chalk.green(`Sorry, only ${stock} remain`));
                 connection.end();
 
             // If sufficient inventory, fulfill order
@@ -56,9 +57,9 @@ function start() {
                 // Update quantity in SQL database
                 const newStock = stock - answers.quantity;
                 updateStockQuantity(answers.id, newStock, function(err) {
-                    if(err) console.log(err);
+                    if(err) console.log(chalk.bgRed(err));
                     // Once updated, display total cost of purchase 
-                    console.log(`The total for ${answers.quantity} ${products[0].product_name} is $${parseInt(products[0].price.substring(1)) * answers.quantity}`);
+                    console.log(chalk.green(`The total for ${answers.quantity} ${products[0].product_name} is $${parseFloat(products[0].price.substring(1)) * answers.quantity}`));
                     connection.end();
 
                     // Confirm purchase
@@ -71,9 +72,9 @@ function start() {
                         }
                     ]).then(function(answer) {
                         if (answer.confirm === true) {
-                            console.log(`Bamazon Primo will deliver your ${products[0].product_name} in two business days!`);
+                            console.log(chalk.green(`Bamazon Primo will deliver your ${products[0].product_name} in two business days!`));
                         } else {
-                            console.log(`We're sorry you changed your mind.`);
+                            console.log(chalk.green(`We're sorry you changed your mind.`));
                         }
                     })
                 });

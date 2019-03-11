@@ -1,7 +1,7 @@
-const cTable = require('console.table');
-const mysql = require('mysql');
-const inquirer = require('inquirer');
 const chalk = require('chalk');
+const cTable = require('console.table');
+const inquirer = require('inquirer');
+const mysql = require('mysql');
 const Product = require('./product.js');
 const connection = require('./database');
 
@@ -39,7 +39,7 @@ function menu() {
                 if(err) console.log(chalk.bgRed(err));
                 
                 if(products.length === 0) {
-                    console.log('There are currently no items with low inventory.')
+                    console.log(chalk.cyan('There are currently no items with low inventory.'));
                 } else {
                     console.table(products);
                 }
@@ -69,7 +69,7 @@ function menu() {
                     // Update database 
                     updateStockQuantity(answers.itemId, answers.quantity, function(err) {
                         if(err) console.log(chalk.bgRed(err));
-                        console.log(`Item ${answers.itemId} successfully restocked (${answers.quantity} added).`);
+                        console.log(chalk.green(`Item ${answers.itemId} successfully restocked (${answers.quantity} added).`));
                         displayUpdatedProduct(answers.itemId, function() {
                             menu();
                         });
@@ -79,7 +79,7 @@ function menu() {
 
         } else if(response.menu === 'Add New Product') {
             // Allow manager to add completely new product to store
-            console.log('Please follow the prompt to add information about the new item.');
+            console.log(chalk.green('Please follow the prompt to add information about the new item.'));
             inquirer
             .prompt([
                 {
@@ -109,14 +109,14 @@ function menu() {
                         if(err) console.log(chalk.bgRed(err));
                         products.forEach(p => p.price = `$ ${p.price.toFixed(2)}`);
                         console.table(products);
-                        console.log('\nItem successfully added!');
+                        console.log(chalk.green('\nItem successfully added!'));
                         menu();
                     });
                 });
             });
 
         } else {
-            console.log('You have exited the program.');
+            console.log(chalk.yellow('You have exited the program.'));
             connection.end();
         }
     });
