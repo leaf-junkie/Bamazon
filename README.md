@@ -8,7 +8,7 @@ To use this application, you will need to npm install MySQL and Inquirer. Be sur
 
 Additionally, you can use a table formatting package like console.table to improve the readability of your table.
 
-### Bamazon Customer
+## Bamazon Customer
 As a valued Bamazon **customer**, you can view all of our wonderful products.
 Select your desired item and quantity to checkout.
 
@@ -21,7 +21,7 @@ You will also be prompted to enter a number corresponding to the ID of the item 
 
 The third and final prompt will confirm your selection before purchase. If you enter `<Y>` (yes), you will get a message saying that your order will be delivered soon before the application closes. If you choose `<n>` (no), you will get a different message saying that we're sorry you changed your mind, and the application will close. 
 
-### Bamazon Manager
+## Bamazon Manager
 As a **manager**, you can view and manage the inventory of the available products. 
 
 You will first be prompted with a list of choices to view available products, view low inventory, add to inventory, add new product, or exit application.
