@@ -1,17 +1,19 @@
+const cTable = require('console.table');
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const chalk = require('chalk');
 const Product = require('./product.js');
 const connection = require('./database');
 
 connection.connect(function(err) {
-    if(err) console.log(err);
-    console.log(`Connected as ID ${connection.threadId}\n`);
+    if(err) console.log(chalk.bgRed(err));
+    console.log(chalk.gray(`Connected as ID ${connection.threadId}\n`));
     menu();
 });
 
 // menu options
 function menu() {
-    
+    console.log('......................................................................')
     inquirer
     .prompt([
         {
@@ -25,16 +27,22 @@ function menu() {
         if(response.menu === 'View Available Products') {
             // List available items (item IDs, names, prices, quantities)
             displayAll(function(err, products) {
-                if(err) console.log(err);
-                console.log(products);
+                if(err) console.log(chalk.bgRed(err));
+                products.forEach(p => p.price = `$ ${p.price.toFixed(2)}`);
+                console.table(products);
                 menu();
             });
                  
         } else if(response.menu === 'View Low Inventory') {
             // List all items where inventory < 5
             displayLowInventory(function(err, products) {
-                if(err) console.log(err);
-                console.log(products);
+                if(err) console.log(chalk.bgRed(err));
+                
+                if(products.length === 0) {
+                    console.log('There are currently no items with low inventory.')
+                } else {
+                    console.table(products);
+                }
                 menu();
             });
 
@@ -53,13 +61,20 @@ function menu() {
                     message: 'How many would you like to add to the inventory?'
                 }
             ]).then(function(answers) {
-                // Update database 
-                updateStockQuantity(answers.itemId, answers.quantity, function(err) {
-                    if(err) console.log(err);
-                    console.log(`Inventory of item ${answers.itemId} successfully restocked (+${answers.quantity}).`);
-                displayUpdatedProduct(itemId);
-                menu();
-                });
+                // Check if itemId exists in the database
+                if(!answers.item_id) {
+                    console.log('Please enter a valid ID.');
+                    menu();
+                } else {
+                    // Update database 
+                    updateStockQuantity(answers.itemId, answers.quantity, function(err) {
+                        if(err) console.log(chalk.bgRed(err));
+                        console.log(`Inventory of item ${answers.itemId} successfully restocked (+${answers.quantity}).`);
+                        displayUpdatedProduct(answers.itemId, function() {
+                            menu();
+                        });
+                    });
+                }
             });
 
         } else if(response.menu === 'Add New Product') {
@@ -89,10 +104,11 @@ function menu() {
                 }
             ]).then(function(answers) {
                 addProduct(answers.newName, answers.newDepartment, answers.newPrice, answers.newQuantity, function(err, response) {
-                    if(err) console.log(err);
+                    if(err) console.log(chalk.bgRed(err));
                     displayAll(function(err, products) {
-                        if(err) console.log(err);
-                        console.log(products);
+                        if(err) console.log(chalk.bgRed(err));
+                        products.forEach(p => p.price = `$ ${p.price.toFixed(2)}`);
+                        console.table(products);
                         menu();
                     });
                 });
@@ -139,4 +155,16 @@ function addProduct(name, department, price, quantity, callback) {
     connection.query(`
     INSERT INTO products(product_name, department_name, price, stock_quantity)
     VALUES('${name}', '${department}', ${price}, ${quantity})`, callback);
+}
+
+function formatTable(products) {
+    console.table([
+        {
+            id: products.item_id,
+            name: products.product_name,
+            department: products.department_name,
+            price: products.price,
+            stock: products.stock_quantity
+        }
+    ]);    
 }
