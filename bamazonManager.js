@@ -62,19 +62,19 @@ function menu() {
                 }
             ]).then(function(answers) {
                 // Check if itemId exists in the database
-                if(!answers.item_id) {
-                    console.log('Please enter a valid ID.');
-                    menu();
-                } else {
+                // if(answers.itemId < 0 || answers.itemId > products.length) {
+                //     console.log('Please enter a valid ID.');
+                //     menu();
+                // } else {
                     // Update database 
                     updateStockQuantity(answers.itemId, answers.quantity, function(err) {
                         if(err) console.log(chalk.bgRed(err));
-                        console.log(`Inventory of item ${answers.itemId} successfully restocked (+${answers.quantity}).`);
+                        console.log(`Item ${answers.itemId} successfully restocked (${answers.quantity} added).`);
                         displayUpdatedProduct(answers.itemId, function() {
                             menu();
                         });
                     });
-                }
+                // }
             });
 
         } else if(response.menu === 'Add New Product') {
@@ -109,6 +109,7 @@ function menu() {
                         if(err) console.log(chalk.bgRed(err));
                         products.forEach(p => p.price = `$ ${p.price.toFixed(2)}`);
                         console.table(products);
+                        console.log('\nItem successfully added!');
                         menu();
                     });
                 });
