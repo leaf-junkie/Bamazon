@@ -14,11 +14,11 @@ Select your desired item and quantity to checkout.
 
 Upon running bamazonCustomer.js, you will immediately see a table of the available products.
 
-![Table of available products, prompt, and message](/img-1.png)
+![Table of available products, prompt, and message](/images/img-1.PNG)
 
 You will also be prompted to enter a number corresponding to the ID of the item you wish to purchase. You will then be asked to enter the quantity of said item that you wish to purchase.
 
-![Alternate message if user selects No for confirm](/img-2.png)
+![Alternate message if user selects No for confirm](/images/img-2.PNG)
 
 The third and final prompt will confirm your selection before purchase. If you enter `<Y>` (yes), you will get a message saying that your order will be delivered soon before the application closes. If you choose `<n>` (no), you will get a different message saying that we're sorry you changed your mind, and the application will close. 
 
@@ -27,27 +27,27 @@ As a **manager**, you can view and manage the inventory of the available product
 
 You will first be prompted with a list of choices to view available products, view low inventory, add to inventory, add new product, or exit application.
 
-![List of choices](/img-3.png) 
+![List of choices](/images/img-3.PNG) 
 
 If you select `<View Available Products>`, the application will display a table of the available products, including the item id, product name, price (USD), and stock quantity. 
 
-![View available products](/img-4.png)
+![View available products](/images/img-4.PNG)
 
 If you choose `<View Low Inventory>`, the application will display a table that is populated only with items that have fewer than 5 units remaining. This time, only the item id, product name, and stock quantity will be shown.
 
-![View low inventory](/img-5.png)
+![View low inventory](/images/img-5.PNG)
 
 If you select `<Add to Inventory>`, you will be prompted to answer two questions. The first will ask for the item ID. The second will ask how many of that item you would like to add. This will update the database accordingly.
 
-![Add to inventory](/img-6.png)
+![Add to inventory](/images/img-6.PNG)
 
 If you choose `<Add New Product>`, you will be prompted with a series of questions to enter the new product's name, department, price per item, and initial stock quantity. 
 
-![Add new product](/img-7.png)
+![Add new product](/images/img-7.PNG)
 
 If you select `<Exit>`, the application closes.
 
-![User selected 'Exit'](/img-8.png)
+![User selected 'Exit'](/images/img-8.PNG)
 
 
 ### Bamazon Supervisor
