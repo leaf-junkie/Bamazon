@@ -50,7 +50,7 @@ function start() {
             if(stock < answers.quantity) {
                 console.log(`Sorry, only ${stock} remain`);
                 connection.end();
-                
+
             // If sufficient inventory, fulfill order
             } else {
                 // Update quantity in SQL database
@@ -58,8 +58,7 @@ function start() {
                 updateStockQuantity(answers.id, newStock, function(err) {
                     if(err) console.log(err);
                     // Once updated, display total cost of purchase 
-                    // TODO: If only purchasing one of an item, returns price as "$NAN"
-                    console.log(`The total for ${answers.quantity} ${products[0].product_name} is $${price * answers.quantity}`);
+                    console.log(`The total for ${answers.quantity} ${products[0].product_name} is $${parseInt(products[0].price.substring(1)) * answers.quantity}`);
                     connection.end();
 
                     // Confirm purchase
