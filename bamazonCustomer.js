@@ -1,3 +1,4 @@
+const cTable = require('console.table');
 const inquirer = require('inquirer');
 const connection = require('./database');
 
@@ -14,7 +15,8 @@ function displayProducts() {
     FROM products 
     WHERE stock_quantity > 0`, (err, response) => {
         if(err) console.log(err);
-        console.log(response);
+        response.forEach(p => p.price = `$ ${p.price.toFixed(2)}`);
+        console.table(response);
         // connection.end();
         start();
     });
@@ -36,26 +38,27 @@ function start() {
             message: 'How many would you like to purchase?'  
         }
     ]).then(function(answers) {
-        console.log(`answers.id: ${answers.id}`);
-        console.log(`answers.quantity: ${answers.quantity}`);
-
         getProduct(answers.id, function(err, products) {
             if(err) console.log(err);
-            console.log(products);
-            // Does store have enough inventory to meet customer's request?
+            products.forEach(p => p.price = `$ ${p.price.toFixed(2)}`);
+            console.table(products);
+            
             const stock = products[0].stock_quantity;
             const price = products[0].price;
+            
+            // If insufficient inventory, prevent order from processing
             if(stock < answers.quantity) {
-                // NO: Prevent the order from going through
                 console.log(`Sorry, only ${stock} remain`);
                 connection.end();
-            // YES: Fulfill the customer's order.
+                
+            // If sufficient inventory, fulfill order
             } else {
                 // Update quantity in SQL database
                 const newStock = stock - answers.quantity;
                 updateStockQuantity(answers.id, newStock, function(err) {
                     if(err) console.log(err);
-                    // Once updated, display total cost of purchase
+                    // Once updated, display total cost of purchase 
+                    // TODO: If only purchasing one of an item, returns price as "$NAN"
                     console.log(`The total for ${answers.quantity} ${products[0].product_name} is $${price * answers.quantity}`);
                     connection.end();
 
@@ -102,4 +105,16 @@ function getProduct(itemId, callback) {
     FROM products
     WHERE item_id = ${itemId}
     `, callback);
+}
+
+function formatTable(products) {
+    console.table([
+        {
+            id: products.item_id,
+            name: products.product_name,
+            department: products.department_name,
+            price: products.price,
+            stock: products.stock_quantity
+        }
+    ]);    
 }
